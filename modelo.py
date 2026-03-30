@@ -6,38 +6,21 @@ import re
 import numpy as np
 import pandas as pd
 
-# Visualización 
-import matplotlib.pyplot as plt
-import seaborn as sns
-
 # Scikit-Learn: Transformadores y Preprocesado 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import FunctionTransformer, OrdinalEncoder, OneHotEncoder
 from sklearn.pipeline import Pipeline
+from sklearn.impute import SimpleImputer
 
 # Scikit-Learn: Modelos-Regresión
-from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
-from lightgbm import LGBMRegressor
-
-# Scikit-Learn: Modelos-Clasificación 
-from sklearn.ensemble import RandomForestClassifier
-from xgboost import XGBClassifier
-from lightgbm import LGBMClassifier
 
 # Scikit-Learn: Métricas Regresión
 from sklearn.metrics import (
     root_mean_squared_error,
     mean_absolute_error,
     r2_score
-)
-
-# Scikit-Learn: Métricas Clasificación
-from sklearn.metrics import (
-    f1_score,
-    balanced_accuracy_score,
-    roc_auc_score
 )
 
 # Scikit-Learn: Validación 
@@ -48,15 +31,11 @@ from sklearn.model_selection import (
     KFold
 )
 
-# Scikit-Learn: Selección de features 
-from sklearn.feature_selection import mutual_info_regression
-
 # Otros 
 from scipy import stats
 import joblib
 import os
 import sys
-sys.path.append(os.path.abspath("./src/utils"))
 
 pd.options.mode.copy_on_write = True
 pd.set_option("future.no_silent_downcasting", True)
@@ -241,13 +220,24 @@ features_cat_reg_eco = [col for col in X_eco_train.columns if col not in feature
 features_num_reg_bus = ["duration(h)", "days_left", "stop_num"]
 features_cat_reg_bus = [col for col in X_bus_train.columns if col not in features_num_reg_bus]
 
+num_nulos_pipeline = Pipeline([
+    ('imputer_num', SimpleImputer(strategy='median'))
+])
+
+cat_nulos_pipeline = Pipeline([
+    ('imputer_cat', SimpleImputer(strategy="mode"))
+])
 
 # Tratamiento de features
 preprocessor_trees_eco = ColumnTransformer([
+    ("num_processing", num_nulos_pipeline, features_num_reg_eco),
+    ("cat_processing", cat_nulos_pipeline, features_cat_reg_eco),
     ("procesar_cat_OH", OneHotEncoder(handle_unknown = "ignore"), features_cat_reg_eco)
 ], remainder = "passthrough")
 
 preprocessor_trees_bus = ColumnTransformer([
+    ("num_processing", num_nulos_pipeline, features_num_reg_bus),
+    ("cat_processing", cat_nulos_pipeline, features_cat_reg_bus),
     ("procesar_cat_OH", OneHotEncoder(handle_unknown = "ignore"), features_cat_reg_bus)
 ], remainder = "passthrough")
 
