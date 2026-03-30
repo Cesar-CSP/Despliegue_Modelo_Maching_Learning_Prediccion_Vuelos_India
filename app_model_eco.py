@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 import os
 import joblib
 import pandas as pd
@@ -18,7 +18,10 @@ def hello():
     <h1>CLA Flight Intelligence</h1>
     <p>Bienvenido a nuestra API del modelo de predicción de vuelos de la India de la clase economy</p>
     """
-
+@app.route('/', methods=['GET'])
+def home():
+    return render_template("landing_page.html")
+    
 # Enruta la funcion al endpoint /api/v1/predict
 @app.route('/api/v1/predict', methods=['GET'])
 def predict():
