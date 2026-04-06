@@ -25,25 +25,56 @@ def home():
 # Enruta la funcion al endpoint /api/v1/predict
 @app.route('/api/v1/predict', methods=['GET'])
 def predict():
-    airline = request.args.get('airline', pd.isna, type=object)
-    dep_city = request.args.get('from', pd.isna, type=object)
-    to = request.args.get('to', pd.isna, type=object)
-    duration = request.args.get('duration(h)', np.nan, type=float)
-    dep_time_cat = request.args.get('dep_time_cat', pd.isna, type=object)
-    arr_time_cat = request.args.get('arr_time_cat', pd.isna, type=object)
-    stop_num = request.args.get('stop_num', np.nan, type=float)
-    days_left = request.args.get('days_left', np.nan, type=float)
-    # Si hay valores faltantes, los guardamos en una lista
-    missing = [name for name, val in [('airline', airline), ('from', dep_city), ('to', to), ('duration(h)', duration), ('dep_time_cat', dep_time_cat), ('arr_time_cat', arr_time_cat), ('stop_num', stop_num), ('days_left', days_left)] if pd.isna(val)]
+    # Obtener parámetros sin required
+    airline = request.args.get('airline')
+    dep_city = request.args.get('from')
+    to = request.args.get('to')
+    duration = request.args.get('duration(h)')
+    dep_time_cat = request.args.get('dep_time_cat')
+    arr_time_cat = request.args.get('arr_time_cat')
+    stop_num = request.args.get('stop_num')
+    days_left = request.args.get('days_left')
 
-    input_data = pd.DataFrame({'airline': [airline], 'from': [dep_city], 'to': [to], 'duration(h)': [duration], 'dep_time_cat': [dep_time_cat], 'arr_time_cat': [arr_time_cat], 'stop_num': [stop_num], 'days_left': [days_left]})
+    # Diccionario de campos
+    fields = {
+        'airline': airline,
+        'from': dep_city,
+        'to': to,
+        'duration(h)': duration,
+        'dep_time_cat': dep_time_cat,
+        'arr_time_cat': arr_time_cat,
+        'stop_num': stop_num,
+        'days_left': days_left
+    }
+
+    missing = []
+
+    # Reemplazar vacíos por valores seguros
+    for key, val in fields.items():
+        if val is None or val == "":
+            missing.append(key)
+            if key in ['duration(h)', 'stop_num', 'days_left']:
+                fields[key] = -1
+            else:
+                fields[key] = "Unknown"
+
+    # Convertir numéricos
+    fields['duration(h)'] = float(fields['duration(h)'])
+    fields['stop_num'] = float(fields['stop_num'])
+    fields['days_left'] = float(fields['days_left'])
+
+    # Crear DataFrame
+    input_data = pd.DataFrame([fields])
+
+    # Predecir
     prediction_eco = model_eco.predict(input_data)
 
     response_eco = {'predictions': float(prediction_eco[0])}
     if missing:
-        response_eco['warning'] = f"Missing values imputed for: {', '.join(missing)}"
+        response_eco['warning'] = f"Missing values replaced for: {', '.join(missing)}"
 
     return jsonify(response_eco)
+
 
 # Enruta la funcion al endpoint /api/v1/retrain
 @app.route('/api/v1/retrain', methods=['GET'])

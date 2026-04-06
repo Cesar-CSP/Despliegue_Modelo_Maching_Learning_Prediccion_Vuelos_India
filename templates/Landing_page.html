@@ -61,29 +61,74 @@
 <h1>Predicción de Precio – Clase Economy</h1>
 
 <form id="predictForm">
+
     <label>Aerolínea (airline)</label>
-    <input type="text" name="airline" required>
+    <select name="airline">
+        <option value="">(sin especificar)</option>
+        <option value="Vistara">Vistara</option>
+        <option value="AirIndia">AirIndia</option>
+        <option value="Indigo">Indigo</option>
+        <option value="GO FIRST">GO FIRST</option>
+        <option value="Others">Others</option>
+    </select>
 
     <label>Ciudad Origen (from)</label>
-    <input type="text" name="from" required>
+    <select name="from">
+        <option value="">(sin especificar)</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Chennai">Chennai</option>
+    </select>
 
     <label>Ciudad Destino (to)</label>
-    <input type="text" name="to" required>
+    <select name="to">
+        <option value="">(sin especificar)</option>
+        <option value="Delhi">Delhi</option>
+        <option value="Mumbai">Mumbai</option>
+        <option value="Bangalore">Bangalore</option>
+        <option value="Kolkata">Kolkata</option>
+        <option value="Hyderabad">Hyderabad</option>
+        <option value="Chennai">Chennai</option>
+    </select>
 
     <label>Categoría Hora Salida (dep_time_cat)</label>
-    <input type="text" name="dep_time_cat" required>
+    <select name="dep_time_cat">
+        <option value="">(sin especificar)</option>
+        <option value="Night">Night</option>
+        <option value="Evening">Evening</option>
+        <option value="Morning">Morning</option>
+        <option value="Afternoon">Afternoon</option>
+        <option value="Late Night">Late Night</option>
+        <option value="Early Morning">Early Morning</option>
+    </select>
 
     <label>Categoría Hora Llegada (arr_time_cat)</label>
-    <input type="text" name="arr_time_cat" required>
+    <select name="arr_time_cat">
+        <option value="">(sin especificar)</option>
+        <option value="Night">Night</option>
+        <option value="Evening">Evening</option>
+        <option value="Morning">Morning</option>
+        <option value="Afternoon">Afternoon</option>
+        <option value="Late Night">Late Night</option>
+        <option value="Early Morning">Early Morning</option>
+    </select>
 
     <label>Número de Escalas (stop_num)</label>
-    <input type="number" name="stop_num" step="1" required>
+    <select name="stop_num">
+        <option value="">(sin especificar)</option>
+        <option value="0">0</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+    </select>
 
     <label>Días de Antelación (days_left)</label>
-    <input type="number" name="days_left" step="1" required>
+    <input type="number" name="days_left" step="1">
 
     <label>Duración (duration(h))</label>
-    <input type="number" name="duration(h)" step="0.1" required>
+    <input type="number" name="duration(h)" step="0.1">
 
     <button type="submit">Predecir Precio</button>
 </form>
