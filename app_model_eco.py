@@ -12,12 +12,12 @@ app = Flask(__name__)
 model_eco = joblib.load("xgb_eco.joblib")
 
 # Enruta la landing page (endpoint /)
-@app.route('/', methods=['GET'])
+'''@app.route('/', methods=['GET'])
 def hello():
     return """
     <h1>CLA Flight Intelligence</h1>
     <p>Bienvenido a nuestra API del modelo de predicción de vuelos de la India de la clase economy</p>
-    """
+    """'''
 @app.route('/', methods=['GET'])
 def home():
     return render_template("landing_page.html")
@@ -101,4 +101,4 @@ def retrain():
     
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
