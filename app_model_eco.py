@@ -47,21 +47,19 @@ def predict():
         'days_left': days_left
     }
 
+    # Reemplazar la parte de la imputación manual por esta:
     missing = []
-
-    # Reemplazar vacíos por valores seguros
+    
     for key, val in fields.items():
         if val is None or val == "":
             missing.append(key)
-            if key in ['duration(h)', 'stop_num', 'days_left']:
-                fields[key] = -1
-            else:
-                fields[key] = "Unknown"
-
-    # Convertir numéricos
-    fields['duration(h)'] = float(fields['duration(h)'])
-    fields['stop_num'] = float(fields['stop_num'])
-    fields['days_left'] = float(fields['days_left'])
+            # En lugar de -1, asignamos None para que el Imputer del Pipeline trabaje
+            fields[key] = None 
+    
+    # Convertir numéricos (usando pd.to_numeric para manejar los None correctamente)
+    fields['duration(h)'] = pd.to_numeric(fields['duration(h)'], errors='coerce')
+    fields['stop_num'] = pd.to_numeric(fields['stop_num'], errors='coerce')
+    fields['days_left'] = pd.to_numeric(fields['days_left'], errors='coerce')
 
     # Crear DataFrame
     input_data = pd.DataFrame([fields])
