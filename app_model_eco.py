@@ -18,7 +18,7 @@ model_eco = joblib.load("xgb_eco.joblib")
 def home():
     return render_template("home.html")
 
-# 2. Herramienta visual de predicción (el HTML que ya tenías)
+# 2. Herramienta visual de predicción
 @app.route('/predict', methods=['GET'])
 def predict_visual():
     return render_template("landing_page.html")
@@ -60,30 +60,6 @@ def predict():
         response_eco['warning'] = f"Missing values replaced for: {', '.join(missing)}"
 
     return jsonify(response_eco)
-
-
-# Enruta la funcion al endpoint /api/v1/retrain
-@app.route('/api/v1/retrain', methods=['GET'])
-def retrain():
-    global model_eco
-    if os.path.exists("data/business.csv"):
-        data = pd.read_csv('data/business.csv')
-        data.columns = [col.lower() for col in data.columns]
-
-        X_eco = data.drop(columns=['price'])
-        y_eco = data['price']
-
-        X_eco_train, X_eco_test, y_eco_train, y_eco_test = train_test_split(X_eco, y_eco, test_size=0.20, random_state=42)
-
-        model_eco.fit(X_eco_train, y_eco_train)
-        rmse = root_mean_squared_error(y_eco_test, model_eco.predict(X_eco_test))
-        mae = mean_absolute_error(y_eco_test, model_eco.predict(X_eco_test))
-        r2 = r2_score(y_eco_test, model_eco.predict(X_eco_test))
-        model_eco.fit(X_eco, y_eco)
-
-        return f"Model retrained. New evaluation metric RMSE: {str(rmse)}, MAE: {str(mae)}, R2: {str(r2)}"
-    else:
-        return "<h2>New data for retrain NOT FOUND. Nothing done!</h2>"
     
 
 if __name__ == '__main__':
