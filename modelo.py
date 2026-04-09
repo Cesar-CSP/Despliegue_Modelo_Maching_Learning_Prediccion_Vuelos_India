@@ -44,7 +44,6 @@ pd.set_option("future.no_silent_downcasting", True)
 os.chdir(os.path.dirname(__file__))
 
 df_eco = pd.read_csv("data/economy.csv")
-df_bus = pd.read_csv("data/business.csv")
 
 # Transformer 1: Convertir duración
 class DurationTransformer(BaseEstimator, TransformerMixin):
@@ -191,34 +190,21 @@ etl_pipeline = Pipeline([
 ])
 
 df_eco_clean = etl_pipeline.fit_transform(df_eco)
-df_bus_clean = etl_pipeline.fit_transform(df_bus)
 
 # Split Train y Test
 # Economy
 df_eco_ml = df_eco_clean.copy()
-# Business
-df_bus_ml = df_bus_clean.copy()
 
 df_eco_ml["price_bin"] = pd.qcut(df_eco_ml["price (INR)"], q=10, duplicates="drop")
 X_eco = df_eco_ml.drop(columns=["price_bin", "price (INR)"])
 y_eco = df_eco_ml["price (INR)"]
 
-df_bus_ml["price_bin"] = pd.qcut(df_bus_ml["price (INR)"], q=10, duplicates="drop")
-X_bus = df_bus_ml.drop(columns=["price_bin", "price (INR)"])
-y_bus = df_bus_ml["price (INR)"]
-
 X_eco_train, X_eco_test, y_eco_train, y_eco_test = train_test_split(
     X_eco, y_eco, test_size=0.2, random_state=42, stratify = df_eco_ml["price_bin"]
 )
 
-X_bus_train, X_bus_test, y_bus_train, y_bus_test = train_test_split(
-    X_bus, y_bus, test_size=0.2, random_state=42, stratify = df_bus_ml["price_bin"]
-)
-
 features_num_reg_eco = ["duration(h)", "days_left", "stop_num"]
 features_cat_reg_eco = [col for col in X_eco_train.columns if col not in features_num_reg_eco]
-features_num_reg_bus = ["duration(h)", "days_left", "stop_num"]
-features_cat_reg_bus = [col for col in X_bus_train.columns if col not in features_num_reg_bus]
 
 num_nulos_pipeline = Pipeline([
     ('imputer_num', SimpleImputer(strategy='median'))
@@ -235,12 +221,6 @@ preprocessor_trees_eco = ColumnTransformer([
     ("procesar_cat_OH", OneHotEncoder(handle_unknown = "ignore"), features_cat_reg_eco)
 ], remainder = "passthrough")
 
-preprocessor_trees_bus = ColumnTransformer([
-    ("num_processing", num_nulos_pipeline, features_num_reg_bus),
-    ("cat_processing", cat_nulos_pipeline, features_cat_reg_bus),
-    ("procesar_cat_OH", OneHotEncoder(handle_unknown = "ignore"), features_cat_reg_bus)
-], remainder = "passthrough")
-
 # Modelo
 xgb_eco = Pipeline([
     ("prep", preprocessor_trees_eco),
@@ -251,29 +231,13 @@ xgb_eco = Pipeline([
     ))
 ])
 
-xgb_bus = Pipeline([
-    ("prep", preprocessor_trees_bus),
-    ("model", XGBRegressor(
-        max_depth = 5,
-        random_state=42,
-        n_jobs=-1
-    ))
-])
-
 xgb_eco.fit(X_eco_train, y_eco_train)
-xgb_bus.fit(X_bus_train, y_bus_train)
 
 print("Economy")
 print("RMSE Test: ", root_mean_squared_error(y_eco_test, xgb_eco.predict(X_eco_test)))
 print("MAE Test: ", mean_absolute_error(y_eco_test, xgb_eco.predict(X_eco_test)))
 print("R2 Test: ", r2_score(y_eco_test, xgb_eco.predict(X_eco_test)))
-print("Business")
-print("RMSE Test: ", root_mean_squared_error(y_bus_test, xgb_bus.predict(X_bus_test)))
-print("MAE Test: ", mean_absolute_error(y_bus_test, xgb_bus.predict(X_bus_test)))
-print("R2 Test: ", r2_score(y_bus_test, xgb_bus.predict(X_bus_test)))
 
 xgb_eco.fit(X_eco, y_eco)
-xgb_bus.fit(X_bus, y_bus)
 
 joblib.dump(xgb_eco, "xgb_eco.joblib")
-joblib.dump(xgb_bus, "xgb_bus.joblib")
