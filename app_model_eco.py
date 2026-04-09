@@ -11,18 +11,17 @@ app = Flask(__name__)
 # Cargar el modelo
 model_eco = joblib.load("xgb_eco.joblib")
 
-# Enruta la landing page (endpoint /)
-'''@app.route('/', methods=['GET'])
-def hello():
-    return """
-    <h1>CLA Flight Intelligence</h1>
-    <p>Bienvenido a nuestra API del modelo de predicción de vuelos de la India de la clase economy</p>
-    """'''
+# 1. Página de documentación (Home)
 @app.route('/', methods=['GET'])
 def home():
+    return render_template("home.html")
+
+# 2. Herramienta visual de predicción (el HTML que ya tenías)
+@app.route('/predict', methods=['GET'])
+def predict_visual():
     return render_template("landing_page.html")
-    
-# Enruta la funcion al endpoint /api/v1/predict
+
+# 3. La lógica de la API se mantiene igual
 @app.route('/api/v1/predict', methods=['GET'])
 def predict():
     # Obtener parámetros sin required
