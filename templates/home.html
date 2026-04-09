@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación API – CLA Flight Intelligence</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; line-height: 1.6; padding: 40px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid #3498db; padding-bottom: 20px; margin-bottom: 30px; }
+        h1 { color: #2c3e50; margin-bottom: 10px; }
+        h2 { color: #3498db; border-left: 5px solid #3498db; padding-left: 10px; margin-top: 30px; }
+        .endpoint { background: #f9f9f9; padding: 15px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 20px; }
+        code { background: #e8f4fd; color: #2980b9; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        .method { font-weight: bold; color: #27ae60; }
+        .btn-predict { display: inline-block; background: #3498db; color: white; padding: 12px 25px; text-decoration: none; border-radius: 6px; margin-top: 20px; transition: background 0.3s; }
+        .btn-predict:hover { background: #2980b9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { text-align: left; padding: 10px; border-bottom: 1px solid #eee; }
+        th { background: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>CLA Flight Intelligence</h1>
+        <p>Documentación Oficial de la API de Predicción de Vuelos (India)</p>
+    </div>
+
+    <p>Bienvenido a la documentación técnica de nuestra API. Este servicio utiliza un modelo de Machine Learning (XGBoost) entrenado para predecir precios de vuelos en clase económica.</p>
+
+    <a href="/predict" class="btn-predict">Ir al Predictor Visual ✈️</a>
+
+    <h2>Endpoints Disponibles</h2>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <code>/</code></p>
+        <p><strong>Función:</strong> Landing page principal (esta página). Contiene la documentación y guía de uso de los servicios.</p>
+    </div>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <code>/predict</code></p>
+        <p><strong>Función:</strong> Interfaz gráfica de usuario (HTML). Permite realizar predicciones de forma visual mediante un formulario.</p>
+    </div>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <code>/api/v1/predict</code></p>
+        <p><strong>Función:</strong> Endpoint técnico para obtener predicciones en formato JSON. </p>
+        <p><strong>Parámetros requeridos:</strong></p>
+        <table>
+            <tr><th>Parámetro</th><th>Tipo</th><th>Descripción</th></tr>
+            <tr><td><code>airline</code></td><td>String</td><td>Aerolínea (Vistara, AirIndia, etc.)</td></tr>
+            <tr><td><code>from</code></td><td>String</td><td>Ciudad de origen</td></tr>
+            <tr><td><code>to</code></td><td>String</td><td>Ciudad de destino</td></tr>
+            <tr><td><code>days_left</code></td><td>Int</td><td>Días de antelación</td></tr>
+        </table>
+    </div>
+
+    <div class="endpoint">
+        <p><span class="method">GET</span> <code>/api/v1/retrain</code></p>
+        <p><strong>Función:</strong> Re-entrenamiento automático del modelo. Busca nuevos datos en <code>data/economy.csv</code>, ajusta los parámetros y devuelve las nuevas métricas (RMSE, MAE, R2).</p>
+    </div>
+
+    <footer style="margin-top: 50px; text-align: center; color: #95a5a6; font-size: 0.9em;">
+        &copy; 2026 CLA Flight Intelligence - Travel Agency India
+    </footer>
+</div>
+
+</body>
+</html>
