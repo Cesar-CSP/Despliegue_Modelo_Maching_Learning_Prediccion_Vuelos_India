@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Documentación API – CLA Flight Intelligence</title>
+    
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f6f9; color: #333; line-height: 1.6; padding: 40px; }
         .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
@@ -20,8 +21,12 @@
     </style>
 </head>
 <body>
-
+    
 <div class="container">
+    <div style="width: 100%; margin-bottom: 25px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+        <img src="{{ url_for('static', filename='images/portada.jpg') }}" alt="Vuelos India CLA" style="width: 100%; height: auto; display: block;">
+    </div>
+    
     <div class="header">
         <h1>CLA Flight Intelligence</h1>
         <p>Documentación Oficial de la API de Predicción de Vuelos (India)</p>
@@ -49,11 +54,14 @@
         <p><strong>Parámetros requeridos:</strong></p>
         <table>
             <tr><th>Parámetro</th><th>Tipo</th><th>Descripción</th></tr>
-            <tr><td><code>airline</code></td><td>String</td><td>Aerolínea (Vistara, AirIndia, etc.)</td></tr>
-            <tr><td><code>from</code></td><td>String</td><td>Ciudad de origen</td></tr>
+            <tr><td><code>airline</code></td><td>String</td><td>Aerolínea (Vistara, AirIndia, Indigo, etc.)</td></tr>
+            <tr><td7><code>from</code></td><td>String</td><td>Ciudad de origen (Delhi, Mumbai, etc.)</td></tr>
             <tr><td><code>to</code></td><td>String</td><td>Ciudad de destino</td></tr>
-            <tr><td><code>days_left</code></td><td>Int</td><td>Días de antelación</td></tr>
-        </table>
+            <tr><td><code>dep_time_cat</code></td><td>String</td><td>Categoría hora salida (Morning, Evening, etc.)</td></tr>
+            <tr><td><code>arr_time_cat</code></td><td>String</td><td>Categoría hora llegada (Night, Afternoon, etc.)</td></tr>
+            <tr><td><code>stop_num</code></td><td>Int</td><td>Número de escalas (0, 1, 2)</td></tr>
+            <tr><td><code>days_left</code></td><td>Int</td><td>Días de antelación para el vuelo</td></tr>
+</table>
     </div>
 
     <div class="endpoint">
