@@ -24,27 +24,14 @@ def predict_visual():
 # 3. La lógica de la API se mantiene igual
 @app.route('/api/v1/predict', methods=['GET'])
 def predict():
-    # Obtener parámetros sin required
-    airline = request.args.get('airline')
-    dep_city = request.args.get('from')
-    to = request.args.get('to')
-    duration = request.args.get('duration(h)')
-    dep_time_cat = request.args.get('dep_time_cat')
-    arr_time_cat = request.args.get('arr_time_cat')
-    stop_num = request.args.get('stop_num')
-    days_left = request.args.get('days_left')
-
-    # Diccionario de campos
-    fields = {
-        'airline': airline,
-        'from': dep_city,
-        'to': to,
-        'duration(h)': duration,
-        'dep_time_cat': dep_time_cat,
-        'arr_time_cat': arr_time_cat,
-        'stop_num': stop_num,
-        'days_left': days_left
-    }
+    fields = { 'airline': request.args.get('airline'),
+              'from': request.args.get('from'),
+              'to': request.args.get('to'),
+              'duration(h)': request.args.get('duration(h)'),
+              'dep_time_cat': request.args.get('dep_time_cat'),
+              'arr_time_cat': request.args.get('arr_time_cat'),
+              'stop_num': request.args.get('stop_num'),
+              'days_left': request.args.get('days_left') }
 
     # Reemplazar la parte de la imputación manual por esta:
     missing = []
