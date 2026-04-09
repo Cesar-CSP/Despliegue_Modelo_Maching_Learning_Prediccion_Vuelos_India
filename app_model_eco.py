@@ -66,8 +66,8 @@ def predict():
 @app.route('/api/v1/retrain', methods=['GET'])
 def retrain():
     global model_eco
-    if os.path.exists("data/economy.csv"):
-        data = pd.read_csv('data/economy.csv')
+    if os.path.exists("data/business.csv"):
+        data = pd.read_csv('data/business.csv')
         data.columns = [col.lower() for col in data.columns]
 
         X_eco = data.drop(columns=['price'])
